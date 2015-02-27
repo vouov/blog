@@ -9,12 +9,3 @@
 	</div>
   </div>
 </footer>
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?798cba9e4e8c6a21c7e77eccfcc40311";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
