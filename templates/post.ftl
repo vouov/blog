@@ -1,15 +1,25 @@
-<#include "header.ftl">
-	
-	<#include "menu.ftl">
-	
-	<div class="page-header">
-		<h1><#escape x as x?xml>${content.title}</#escape></h1>
-	</div>
+<!DOCTYPE html>
+<html>
+<#include "head.ftl">
+<body class="">
+  <div class="site-wrap">
+    <#include "header.ftl">
 
-	<p><em>${content.date?string("dd MMMM yyyy")}</em></p>
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+		<div class="post-header mb2">
+		  <h1 class="py2"><#escape x as x?xml>${content.title}</#escape></h1>
+		  <span class="post-meta">${content.date?string("yyyy年MM月dd日")}</span><br>
+		  <#-- <span class="post-meta small">{{ minutes }} minute read</span> -->
+		</div>
 
-	<p>${content.body}</p>
+		<article class="post-content">
+		  ${content.body}
+		</article>
+      </div>
+    </div>
+  </div>
 
-	<hr />
-	
-<#include "footer.ftl">
+  <#include "footer.ftl">
+</body>
+</html>

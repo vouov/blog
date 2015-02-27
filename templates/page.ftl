@@ -1,15 +1,24 @@
-<#include "header.ftl">
+<!DOCTYPE html>
+<html>
+<#include "head.ftl">
+<body class="">
+  <div class="site-wrap">
+    <#include "header.ftl">
 
-	<#include "menu.ftl">
-	
-	<div class="page-header">
-		<h1><#escape x as x?xml>${content.title}</#escape></h1>
-	</div>
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        <div class="post">
+		  <header class="post-header">
+			<h1 class="h2">${content.title}</h1>
+		  </header>
+		  <article class="post-content">
+		  ${content.body}
+		  </article>
+		</div>
+      </div>
+    </div>
+  </div>
 
-	<p><em>${content.date?string("dd MMMM yyyy")}</em></p>
-
-	<p>${content.body}</p>
-
-	<hr />
-
-<#include "footer.ftl">
+  <#include "footer.ftl">
+</body>
+</html>

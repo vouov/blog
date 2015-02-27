@@ -1,20 +1,35 @@
-<#include "header.ftl">
-	
-	<#include "menu.ftl">
+<!DOCTYPE html>
+<html>
+<#include "head.ftl">
+<body class="">
+  <div class="site-wrap">
+    <#include "header.ftl">
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+		<div class="home">
+		  <div class="posts">
+			<#list pagination_posts as post>
+				<#if (post.status == "published")>
+					<div class="post">
+						<a href="${post.uri}" class="post-link">
+						  <h3 class="h2 post-title"><#escape x as x?xml>${post.title}</#escape></h3>
+						  <p class="post-meta">${post.date?string("yyyy年MM月dd日")}</p>
+						  <p class="post-summary">${post.body}</p>
+						</a>
+					 </div>
+				</#if>
+			</#list>
+		  </div>
+		  <#include "pagination.ftl">
+		</div>
+      </div>
+    </div>
+  </div>
 
-	<div class="page-header">
-		<h1>Blog</h1>
-	</div>
-	<#list posts as post>
-  		<#if (post.status == "published")>
-  			<a href="${post.uri}"><h1><#escape x as x?xml>${post.title}</#escape></h1></a>
-  			<p>${post.date?string("dd MMMM yyyy")}</p>
-  			<p>${post.body}</p>
-  		</#if>
-  	</#list>
-	
-	<hr />
-	
-	<p>Older posts are available in the <a href="/${config.archive_file}">archive</a>.</p>
+  <#include "footer.ftl">
+</body>
+</html>
 
-<#include "footer.ftl">
+
+	
+
