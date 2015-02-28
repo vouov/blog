@@ -17,11 +17,12 @@
 	<!-- Fonts -->
 	<link href='//fonts.useso.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
 	<link href='//fonts.useso.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?798cba9e4e8c6a21c7e77eccfcc40311";
+  hm.src = "//hm.baidu.com/hm.js?4cd8a5e7fd1b62b1e6a05a5cccebed70";
   var s = document.getElementsByTagName("script")[0]; 
   s.parentNode.insertBefore(hm, s);
 })();

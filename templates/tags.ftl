@@ -1,21 +1,27 @@
-<#include "header.ftl">
+<!DOCTYPE html>
+<html>
+<#include "head.ftl">
+<body class="">
+  <div class="site-wrap">
+    <#include "header.ftl">
 
-	<#include "navigation.ftl">
-	
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+	  
 	<div class="page-header">
 		<h1>Tag: ${tag}</h1>
 	</div>
 	
-	<!--<ul>-->
+	<ul>
 		<#list tag_posts as post>
 		<#if (last_month)??>
 			<#if post.date?string("MMMM yyyy") != last_month>
 				</ul>
-				<h4>${post.date?string("MMMM yyyy")}</h4>
+				<h4>${post.date?string("yyyy年MM月")}</h4>
 				<ul>
 			</#if>
 		<#else>
-			<h4>${post.date?string("MMMM yyyy")}</h4>
+			<h4>${post.date?string("yyyy年MM月")}</h4>
 			<ul>
 		</#if>
 		
@@ -23,5 +29,10 @@
 		<#assign last_month = post.date?string("MMMM yyyy")>
 		</#list>
 	</ul>
-	
-<#include "footer.ftl">
+	</div>
+    </div>
+  </div>
+
+  <#include "footer.ftl">
+</body>
+</html>

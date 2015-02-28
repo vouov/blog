@@ -16,6 +16,8 @@
 		<article class="post-content">
 		  ${content.body}
 		</article>
+		
+		<#include "post_footer.ftl">
       </div>
     </div>
   </div>
