@@ -25,6 +25,12 @@ status=published
   * 接下来就是在blog目录中content\blog目录下写自己的.md文件，具体请参照markdown语法
   * 写好文章就是编译成HTML，运行命令 jbake . <目的路径>,刷新一下浏览器的地址就可以看到你的文章了
   * 提交同步自己的github仓库中，就可以通过域名访问最新的内容了
+  
+用到的软件列表如下：
+[Jbake](http://jbake.org)
+[highlightjs](https://highlightjs.org/)
+[新浪微博留言箱](http://open.weibo.com/widget/comments.php)
+[百度分享](http://share.baidu.com/)
 
 如果使用中有什么问题可以留言给我，或者通过最底部的多种联系方式联系我！
 具体可以参照我的github blog源码：
