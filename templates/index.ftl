@@ -14,8 +14,8 @@
 						<a href="${post.uri}" class="post-link">
 						  <h3 class="h2 post-title"><#escape x as x?xml>${post.title}</#escape></h3>
 						  <p class="post-meta">${post.date?string("yyyy年MM月dd日")}</p>
-						  <p class="post-summary">${post.body}</p>
 						</a>
+						<p class="post-summary">${post.body}</p>
 					 </div>
 				</#if>
 			</#list>
