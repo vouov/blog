@@ -1,7 +1,7 @@
 title=Java中AES加密兼容PHP等其他语言实现
 date=2015-03-04
 type=post
-tags=java,加密
+tags=java,加密,AES
 status=published
 ~~~~~~
 
@@ -34,12 +34,35 @@ AES/PCBC/ISO10126Padding      32                          16
 
 可以看到，在原始数据长度为16的整数倍时，假如原始数据长度等于16*n，则使用NoPadding时加密后数据长度等于16*n，其它情况下加密数据长度等于16*(n+1)。在不足16的整数倍的情况下，假如原始数据长度等于16*n+m[其中m小于16]，除了NoPadding填充之外的任何方式，加密数据长度都等于16*(n+1)；NoPadding填充情况下，CBC、ECB和PCBC三种模式是不支持的，CFB、OFB两种模式下则加密数据长度等于原始数据长度。
 
-我的主要实现思路是对于密码和IV我们通过MD5算法强制让所得到的byte[]长度是16的倍数，对于要加密的内容，先获取长度，如果长度不是16的倍数，则申请大于现有长度而且是16倍数的byte[]内存，然后通过拷贝把原有的内容拷贝到新申请的内存空间，这就相当于做了补零操作。其实就是实现了java的AES/CBC/ZeroPadding算法。具体实现代码下面给出参考实现。
+我的主要实现思路是对于密码和IV我们通过MD5算法强制让所得到的byte[]长度是16的倍数，对于要加密的内容，先获取长度，如果长度不是16的倍数，则申请大于现有长度而且是16倍数的byte[]内存，然后通过拷贝把原有的内容拷贝到新申请的内存空间，这就相当于做了补零操作。其实就是实现了java的AES/CBC/ZeroPadding算法;对于解密也一样需要对末端的补零位清理，达到加密和解密的值相等；具体实现代码下面给出参考实现。
 
 
 java参考代码：
 
 ```java
+/**
+ * 兼容PHP等其他语言AES加密、解密方法
+ *
+ * @param mode
+ * @param data
+ * @param password
+ * @param iv
+ * @return
+ * @throws Exception
+ */
+public static byte[] aesZeroPadding(int mode, byte[] data, String password, String iv) throws Exception {
+	SecretKeySpec secretKeySpec = new SecretKeySpec(
+		StringUtils.getBytesUtf8(md5(password).substring(0, 16)), 
+		"AES");
+	Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+
+	IvParameterSpec ivParameterSpec = new IvParameterSpec(
+		StringUtils.getBytesUtf8(md5(iv).substring(0, 16)));
+	cipher.init(mode, secretKeySpec, ivParameterSpec);
+
+	return cipher.doFinal(data);
+}
+
 /**
  * 兼容PHP等其他语言AES加密方法
  *
@@ -49,15 +72,9 @@ java参考代码：
  * @return
  * @throws Exception
  */
-public static String encodeAESZeroPadding(String data, String password, String iv) throws Exception {
+public static String encodeAESZeroPadding(String data, String password, String iv) {
 	try {
-		SecretKeySpec secretKeySpec = new SecretKeySpec(
-		StringUtils.getBytesIso8859_1(md5(password)),
-		"AES");
 		Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-		IvParameterSpec ivParameterSpec = new IvParameterSpec(StringUtils.getBytesIso8859_1(md5(iv)));
-		cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
-
 		//对内容不是16整数倍数时补位
 		int blockSize = cipher.getBlockSize();
 		byte[] bytes = StringUtils.getBytesUtf8(data);
@@ -68,10 +85,7 @@ public static String encodeAESZeroPadding(String data, String password, String i
 		}
 		byte[] newBytes = new byte[dataBytesLength];
 		System.arraycopy(bytes, 0, newBytes, 0, bytes.length);
-
-
-		byte[] result = cipher.doFinal(bytes);
-		return Base64.encode(result);
+		return Base64.encode(aesZeroPadding(Cipher.ENCRYPT_MODE, newBytes, password, iv));
 	} catch (Exception e) {
 		logger.error("AES ZeroPadding模式加密失败", e);
 		throw new RuntimeException(e);
@@ -87,18 +101,23 @@ public static String encodeAESZeroPadding(String data, String password, String i
  * @return
  * @throws Exception
  */
-public static String decodeAESZeroPadding(String data, String password, String iv) throws Exception {
+public static String decodeAESZeroPadding(String data, String password, String iv) {
 	try {
-		SecretKeySpec secretKeySpec = new SecretKeySpec(
-		StringUtils.getBytesIso8859_1(md5(password)), 
-		"AES");
-		Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-		IvParameterSpec ivParameterSpec = new IvParameterSpec(StringUtils.getBytesIso8859_1(md5(iv)));
-		cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);// 初始化
+		byte[] decodedBytes = aesZeroPadding(
+			Cipher.DECRYPT_MODE, Base64.decode(data), password, iv);
+		//去除增加的zero padding
+		int emptyLength = 0;
+		for (int i = decodedBytes.length; i > 0; i--) {
 
-		byte[] bytes = Base64.decode(data);
-		byte[] result = cipher.doFinal(bytes);
-		return StringUtils.newStringUtf8(result);
+			if (decodedBytes[i - 1] == 0) {
+				emptyLength++;
+			} else {
+				break;
+			}
+		}
+		byte[] newBytes = new byte[decodedBytes.length - emptyLength];
+		System.arraycopy(decodedBytes, 0, newBytes, 0, decodedBytes.length - emptyLength);
+		return StringUtils.newStringUtf8(newBytes);
 	} catch (Exception e) {
 		logger.error("AES ZeroPadding模式解密失败", e);
 		throw new RuntimeException(e);
