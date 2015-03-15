@@ -25,7 +25,8 @@ status=published
      * @throws IOException
      * @throws InvalidFormatException
      */
-public static <T> void generateExcel(InputStream templateInputStream, Iterator<T> data, OutputStream outputStream) throws IOException, InvalidFormatException {
+public static <T> void generateExcel(InputStream templateInputStream, 
+Iterator<T> data, OutputStream outputStream) throws IOException, InvalidFormatException {
 	// 通过类加载器获取模板
 	XSSFWorkbook workbook = new XSSFWorkbook(templateInputStream);
 	XSSFSheet sheet = workbook.getSheetAt(0);
@@ -49,7 +50,7 @@ public static <T> void generateExcel(InputStream templateInputStream, Iterator<T
 	}
 
 	sheet.removeRow(row);
-	SXSSFWorkbook newWorkbook = new SXSSFWorkbook(workbook); // keep 100 rows in memory, exceeding rows will be flushed to disk
+	SXSSFWorkbook newWorkbook = new SXSSFWorkbook(workbook);
 	Sheet newSheet = newWorkbook.getSheetAt(0);
 	int rowNum = 1;
 	while (data.hasNext()) {
